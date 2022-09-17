@@ -66,7 +66,7 @@ public class DataController {
 
         System.out.println("Init Success");
 
-        System.out.println(arrayList.toString());
+        System.out.println("Receive data: " + arrayList.toString());
 
         Util.loadDataToNetConfig(arrayList, netConfig);
 

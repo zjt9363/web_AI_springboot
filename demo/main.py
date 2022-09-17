@@ -19,7 +19,7 @@ data = pickle.load(f, encoding='bytes')
 f.close()
 (x_train, y_train), (x_test, y_test) = data
 
-epochs = 9999
+epochs = 10
 input_shape = (x_train.shape[1],
                x_train.shape[2],
                1 if len(x_train.shape) == 3 else x_train.shape[3])
@@ -36,13 +36,12 @@ y_train = keras.utils.to_categorical(y_train, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
-model.add(Conv2D(padding="valid", input_shape=input_shape, filters=6, activation="relu", kernel_size=(5,5)))
+model.add(Conv2D(padding="valid", input_shape=input_shape, filters=128, activation="relu", kernel_size=(6,6)))
+model.add(Conv2D(padding="valid", filters=128, activation="relu", kernel_size=(6,6)))
 model.add(MaxPooling2D(padding="valid", pool_size=(2,2)))
-model.add(Conv2D(padding="valid", filters=6, activation="relu", kernel_size=(5,5)))
-model.add(MaxPooling2D(padding="valid", pool_size=(2,2)))
+model.add(Dropout(rate=0.5))
 model.add(Flatten())
 model.add(Dense(units=128, activation="relu"))
-model.add(Dropout(rate=0.75))
 model.add(Dense(units=256, activation="relu"))
 model.add(Dropout(rate=0.75))
 model.add(Dense(units=10, activation="softmax"))
@@ -54,13 +53,11 @@ model.compile(loss='categorical_crossentropy',
 
 model.save('C:/Users/Zarrow/IdeaProjects/SelfStudy/web_AI_springboot/demo/model.h5')
 
-early_stopping = keras.callbacks.EarlyStopping(mode='auto', min_delta=0.001, patience=5, monitor='val_accuracy', verbose=0)
-
 history = model.fit(x_train, y_train,
                     batch_size=batch_size,
                     epochs=epochs,
                     verbose=2,
-                    validation_data=(x_test, y_test),callbacks=[early_stopping])
+                    validation_data=(x_test, y_test))
 
 score = model.evaluate(x_test, y_test, verbose=0)
 

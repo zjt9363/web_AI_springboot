@@ -38,6 +38,7 @@ public class PyRun{
             while ((line = in.readLine()) != null) {
                 if (Thread.interrupted()){
                     interrupt = true;
+                    proc.destroy();
                     break;
                 }
 
